@@ -1,0 +1,41 @@
+name:                project-euler-haskell
+version:             0.1.0.0
+synopsis:            Solutions to Project Euler problems
+description:         This package contains solutions to Project Euler problems.
+homepage:            http://github.com/FranklinChen/project-euler-haskell
+bug-reports:         http://github.com/FranklinChen/project-euler-haskell/issues
+license:             BSD3
+license-file:        LICENSE
+copyright:           (c) 2012 Franklin Chen
+author:              Franklin Chen <franklinchen@franklinchen.com>
+maintainer:          franklinchen@franklinchen.com
+category:            Math
+build-type:          Simple
+cabal-version:       >=1.8
+extra-source-files:  .gitignore,
+                     README.md
+
+source-repository head
+  type:              git
+  location:          http://github.com/FranklinChen/project-euler-haskell.git
+
+library
+  build-depends:     base
+  exposed-modules:   Euler.Problem1
+
+executable answer1
+  main-is:           Answer/answer1.hs
+  build-depends:     base,
+                     project-euler-haskell
+
+-- detailed-0.9 problem integrating with HUnit?
+test-suite test-problem1
+  type:              exitcode-stdio-1.0
+  main-is:           Test/Test1.hs
+  build-depends:     base,
+                     project-euler-haskell,
+                     test-framework,
+                     test-framework-hunit,
+                     test-framework-th,
+                     HUnit
+
