@@ -40,11 +40,16 @@ You may need to install dependencies, e.g.,
 ```
 $ cabal install test-framework
 $ cabal install test-framework-hunit
+$ cabal install test-framework-quickcheck2
 $ cabal install test-framework-th
 $ cabal install HUnit
 ```
 
 ### Build and test
+
+We are using [`test-framework`](http://batterseapower.github.com/test-framework/) for testing, wrapping around the [QuickCheck](http://hackage.haskell.org/packages/archive/QuickCheck/latest/doc/html/Test-QuickCheck.html) and [HUnit](http://hackage.haskell.org/packages/archive/HUnit/latest/doc/html/Test-HUnit.html) frameworks.
+
+Also, we use [`test-framework-th`](http://hackage.haskell.org/package/test-framework-th), a nice wrapper using [Template Haskell](http://www.haskell.org/haskellwiki/Template_Haskell) to simplify the writing of test cases.
 
 ```
 $ cabal build && cabal test
@@ -66,3 +71,7 @@ $ cabal haddock
 ```
 
 Open up `dist/doc/html/project-euler-haskell/index.html` in your Web browser to view the generated documentation.
+
+## More documentation
+
+Use [Hoogle](http://www.haskell.org/hoogle/) to search for stuff.

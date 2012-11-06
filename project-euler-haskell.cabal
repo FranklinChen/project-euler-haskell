@@ -35,7 +35,8 @@ test-suite test-problem1
   build-depends:     base,
                      project-euler-haskell,
                      test-framework,
+                     HUnit,
                      test-framework-hunit,
-                     test-framework-th,
-                     HUnit
-
+                     QuickCheck,
+                     test-framework-quickcheck2,
+                     test-framework-th
