@@ -38,11 +38,12 @@ $ cabal configure --enable-tests
 You may need to install dependencies, e.g.,
 
 ```
+$ cabal install HUnit
+$ cabal install QuickCheck
 $ cabal install test-framework
 $ cabal install test-framework-hunit
 $ cabal install test-framework-quickcheck2
 $ cabal install test-framework-th
-$ cabal install HUnit
 ```
 
 ### Build and test

@@ -24,19 +24,21 @@ library
   exposed-modules:   Euler.Problem1
 
 executable answer1
-  main-is:           Answer/answer1.hs
+  hs-source-dirs:    Answer
+  main-is:           answer1.hs
   build-depends:     base,
                      project-euler-haskell
 
 -- detailed-0.9 problem integrating with HUnit?
 test-suite test-problem1
   type:              exitcode-stdio-1.0
-  main-is:           Test/Test1.hs
+  hs-source-dirs:    Test
+  main-is:           Test1.hs
   build-depends:     base,
                      project-euler-haskell,
-                     test-framework,
                      HUnit,
-                     test-framework-hunit,
                      QuickCheck,
+                     test-framework,
+                     test-framework-hunit,
                      test-framework-quickcheck2,
                      test-framework-th
