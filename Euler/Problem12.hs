@@ -35,7 +35,7 @@ firstTriangleNumberOverNDivisors = head . triangleNumbersOverNDivisors
 -}
 triangleNumbersOverNDivisors :: Integer -> [Integer]
 triangleNumbersOverNDivisors n =
-  [t | t <- triangleNumbers, numDivisorsGreaterThan n t]
+  [t | t <- triangleNumbers, t `hasNumDivisorsGreaterThan` n]
 
 {-|
   Infinite stream of all the triangle numbers.
@@ -48,18 +48,18 @@ triangleNumbers = scanl1 (+) [1..]
   Do this without actually calculating the number of divisors.
   Lazily pull from the stream of factor counts.
 -}
-numDivisorsGreaterThan :: Integer -> Integer -> Bool
-numDivisorsGreaterThan _ 1 = False
-numDivisorsGreaterThan n t =
-  productGreaterThan n [m+1 | m <- factorCounts t]
+hasNumDivisorsGreaterThan :: Integer -> Integer -> Bool
+1 `hasNumDivisorsGreaterThan` _ = False
+t `hasNumDivisorsGreaterThan` n =
+  [m+1 | m <- factorCounts t] `hasProductGreaterThan` n
 
 {-
   Optimization to avoid computing full product if large.
 
-  productGreaterThan n xs == product xs > n
+  xs `hasProductGreaterThan` n == product xs > n
 -}
-productGreaterThan :: Integer -> [Integer] -> Bool
-productGreaterThan n xs = productAlreadyGreaterThan n 1 xs
+hasProductGreaterThan :: [Integer] -> Integer -> Bool
+xs `hasProductGreaterThan` n = productAlreadyGreaterThan n 1 xs
 
 {-
   Bail out early as soon as the partial product is already greater than
@@ -96,7 +96,7 @@ productAlreadyGreaterThan n = loop
   require computation of the number of divisors. It only requires
   checking whether the number is about to exceed a specified bound.
 
-  See numDivisorsGreaterThan for improvement.
+  See hasNumDivisorsGreaterThan for improvement.
 -}
 numDivisors :: Integer -> Integer
 numDivisors 1 = 1
@@ -132,7 +132,7 @@ countDuplicatesOf x count xs@(y:ys)
   Factor @n@ using a given initial stream of factors to test.
 -}
 factorStream :: Integer -> [Integer]
-factorStream = factorStreamFromStream possibleFactors
+factorStream n = n `factorFromStream` possibleFactors
 
 {-
   Return finite stream of one factor at a time of @n@ starting from
@@ -142,13 +142,13 @@ factorStream = factorStreamFromStream possibleFactors
   Non-primes in the candidate factor stream are skipped because
   we divide out factors as we see them.
 -}
-factorStreamFromStream :: [Integer] -> Integer -> [Integer]
-factorStreamFromStream factors@(factor:moreFactors) n
+factorFromStream :: Integer -> [Integer] -> [Integer]
+n `factorFromStream` factors@(factor:moreFactors)
   | factor*factor > n = [n]
   | otherwise =
     case n `quotRem` factor of
-      (q, 0) -> factor : factorStreamFromStream factors q
-      _      -> factorStreamFromStream moreFactors n
+      (q, 0) -> factor : q `factorFromStream` factors
+      _      -> n `factorFromStream` moreFactors
         
 
 {-
