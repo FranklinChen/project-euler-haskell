@@ -22,7 +22,9 @@ source-repository head
 library
   build-depends:     base
   exposed-modules:   Euler.Problem1,
-                     Euler.Problem9
+                     Euler.Problem9,
+                     Euler.Problem12,
+                     Euler.Problem16
 
 executable answer1
   hs-source-dirs:    Answer
@@ -33,6 +35,18 @@ executable answer1
 executable answer9
   hs-source-dirs:    Answer
   main-is:           answer9.hs
+  build-depends:     base,
+                     project-euler-haskell
+
+executable answer12
+  hs-source-dirs:    Answer
+  main-is:           answer12.hs
+  build-depends:     base,
+                     project-euler-haskell
+
+executable answer16
+  hs-source-dirs:    Answer
+  main-is:           answer16.hs
   build-depends:     base,
                      project-euler-haskell
 
@@ -54,6 +68,32 @@ test-suite test-problem9
   type:              exitcode-stdio-1.0
   hs-source-dirs:    Test
   main-is:           Test9.hs
+  build-depends:     base,
+                     project-euler-haskell,
+                     HUnit,
+                     QuickCheck,
+                     test-framework,
+                     test-framework-hunit,
+                     test-framework-quickcheck2,
+                     test-framework-th
+
+test-suite test-problem12
+  type:              exitcode-stdio-1.0
+  hs-source-dirs:    Test
+  main-is:           Test12.hs
+  build-depends:     base,
+                     project-euler-haskell,
+                     HUnit,
+                     QuickCheck,
+                     test-framework,
+                     test-framework-hunit,
+                     test-framework-quickcheck2,
+                     test-framework-th
+
+test-suite test-problem16
+  type:              exitcode-stdio-1.0
+  hs-source-dirs:    Test
+  main-is:           Test16.hs
   build-depends:     base,
                      project-euler-haskell,
                      HUnit,
