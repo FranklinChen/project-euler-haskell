@@ -27,21 +27,51 @@ module Euler.Problem12 where
 {-
   Assume there is an answer, so that head does not fail.
 -}
-firstTriangleNumberOverNDivisors :: Int -> Integer
+firstTriangleNumberOverNDivisors :: Integer -> Integer
 firstTriangleNumberOverNDivisors = head . triangleNumbersOverNDivisors
 
 {-
-  TODO: Could optimize by not computing all the factors.
+  Optimize by not computing all the factors.
 -}
-triangleNumbersOverNDivisors :: Int -> [Integer]
+triangleNumbersOverNDivisors :: Integer -> [Integer]
 triangleNumbersOverNDivisors n =
-  [t | t <- triangleNumbers, numDivisors t > n]
+  [t | t <- triangleNumbers, numDivisorsGreaterThan n t]
 
 {-|
   Infinite stream of all the triangle numbers.
 -}
 triangleNumbers :: [Integer]
 triangleNumbers = scanl1 (+) [1..]
+
+{-
+  Return whether the number of divisors of @t@ > @n@.
+  Do this without actually calculating the number of divisors.
+  Lazily pull from the stream of factor counts.
+-}
+numDivisorsGreaterThan :: Integer -> Integer -> Bool
+numDivisorsGreaterThan _ 1 = False
+numDivisorsGreaterThan n t =
+  productGreaterThan n [m+1 | m <- factorCounts t]
+
+{-
+  Optimization to avoid computing full product if large.
+
+  productGreaterThan n xs == product xs > n
+-}
+productGreaterThan :: Integer -> [Integer] -> Bool
+productGreaterThan n xs = productAlreadyGreaterThan n 1 xs
+
+{-
+  Bail out early as soon as the partial product is already greater than
+  @n@.
+-}
+productAlreadyGreaterThan :: Integer -> Integer -> [Integer] -> Bool
+productAlreadyGreaterThan n = loop
+  where loop prod [] = prod > n
+        loop prod (x:xs)
+          | prod' > n  = True
+          | otherwise = loop prod' xs
+            where prod' = prod*x
 
 {-
   The number of divisors of @n@ does not actually require computation of
@@ -62,11 +92,13 @@ triangleNumbers = scanl1 (+) [1..]
   2^1 * 7^1 = 14
   2^2 * 7^1 = 28
 
-  TODO: this can still be improved, because our problem does not
+  This can still be improved, because our problem does not
   require computation of the number of divisors. It only requires
   checking whether the number is about to exceed a specified bound.
+
+  See numDivisorsGreaterThan for improvement.
 -}
-numDivisors :: Integer -> Int
+numDivisors :: Integer -> Integer
 numDivisors 1 = 1
 numDivisors n = product [m+1 | m <- factorCounts n]
 
@@ -74,7 +106,7 @@ numDivisors n = product [m+1 | m <- factorCounts n]
   For each prime factor, return the number of times it occurs in @n@,
   which is assumed to be > 1.
 -}
-factorCounts :: Integer -> [Int]
+factorCounts :: Integer -> [Integer]
 factorCounts = countDuplicates . factorStream
 
 {-
@@ -83,14 +115,14 @@ factorCounts = countDuplicates . factorStream
 
   countDuplicates xs == [length ys | ys <- List.group xs]
 -}
-countDuplicates :: Eq a => [a] -> [Int]
+countDuplicates :: Eq a => [a] -> [Integer]
 countDuplicates []     = []
 countDuplicates (x:xs) = countDuplicatesOf x 1 xs
 
 {-
   Return possibly infinite stream of counts.
 -}
-countDuplicatesOf :: Eq a => a -> Int -> [a] -> [Int]
+countDuplicatesOf :: Eq a => a -> Integer -> [a] -> [Integer]
 countDuplicatesOf _ count [] = [count]
 countDuplicatesOf x count xs@(y:ys)
   | x == y    = countDuplicatesOf x (count+1) ys

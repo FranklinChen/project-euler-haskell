@@ -15,6 +15,8 @@ import qualified Data.List as List
 import Euler.Problem12 (firstTriangleNumberOverNDivisors,
                         triangleNumbers,
                         numDivisors,
+                        numDivisorsGreaterThan,
+                        productGreaterThan,
                         countDuplicates)
 
 main = $(defaultMainGenerator)
@@ -28,9 +30,8 @@ case_seventh_triangle_number =
 {-
   Make sure the triangle numbers are as they are defined.
 -}
-prop_triangle_numbers =
-  forAll (choose (1, 1000)) $
-  \n -> triangleNumbers !! (fromInteger n - 1) == sum [1..n]
+prop_triangle_numbers (Positive n) =
+  triangleNumbers !! (fromInteger n - 1) == sum [1..n]
 
 --- numDivisors
 
@@ -60,4 +61,12 @@ case_numDivisors_28 =
 prop_countDuplicates =
   forAll (listOf $ choose (1 :: Int, 3)) $
   \xs ->
-  countDuplicates xs == [length ys | ys <- List.group xs]
+  countDuplicates xs == [toInteger $ length ys | ys <- List.group xs]
+
+prop_numDivisors_optimization (Positive n) (Positive t) =
+  numDivisorsGreaterThan n t == (numDivisors t > n)
+
+prop_productGreaterThan_optimization (Positive n) =
+  forAll (listOf $ arbitrary `suchThat` (> (0 :: Integer))) $
+  \xs ->
+  productGreaterThan n xs == (product xs > n)
